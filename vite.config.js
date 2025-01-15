@@ -7,7 +7,7 @@ export default defineConfig({
     // server: {
     //     proxy: {
     //     '/api': {
-    //         target: 'https://openapi.naver.com',
+    //         target: 'https://dapi.kakao.com',
     //         changeOrigin: true,  // API 서버의 CORS 정책을 우회
     //         rewrite: (path) => path.replace(/^\/api/, ''),  // /api 경로를 제거
     //     },

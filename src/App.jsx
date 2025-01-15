@@ -1,84 +1,81 @@
-import { useState } from 'react';
-import './App.css'
+import React, { useState } from 'react';
 import axios from 'axios';
+import './App.css';
 
-function App() {
-    const [query, setQuery] = useState('');
-    const [books, setBooks] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+const App = () => {
+  const [query, setQuery] = useState('');  // 검색어 상태
+  const [books, setBooks] = useState([]);  // 도서 목록 상태
+  const [loading, setLoading] = useState(false);  // 로딩 상태
 
-    // 네이버 도서 API
-    const getBookData = async (query) => {
-        const clientId = import.meta.env.VITE_NAVER_CLIENT_ID;
-        const clientSecret = import.meta.env.VITE_NAVER_CLIENT_SECRET;
+  const apiKey = 'efaecf4bfac95a45ded3847cfe606f0a';  // 카카오 API 키를 넣어주세요
 
-        try {
-            setLoading(true);
-            setError('');  // 에러 상태 초기화
-            const res = await axios.get('https://openapi.naver.com/v1/search/book.json', {
-                params: { query, display: 10 },
-                headers: {
-                    'X-Naver-Client-Id': clientId,
-                    'X-Naver-Client-Secret': clientSecret,
-                },
-            });
-            setBooks(res.data.items);
-        } catch (error) {
-            console.error('API 호출 실패', error);
-            setError('도서 데이터를 가져오는 데 실패했습니다. 다시 시도해주세요.');
-        } finally {
-            setLoading(false);
-        }
-    };
+  // 도서 검색 함수
+  const searchBooks = () => {
+    if (!query) return;  // 검색어가 없으면 아무것도 하지 않음
+    
+    setLoading(true);
+    axios({
+      method: 'GET',
+      url: 'https://dapi.kakao.com/v3/search/book',
+      headers: {
+        Authorization: `KakaoAK ${apiKey}`,
+      },
+      params: {
+        query: query,
+        size: 10,  // 검색할 책의 수 (최대 50)
+      }
+    })
+      .then((response) => {
+        setBooks(response.data.documents);  // 도서 목록 업데이트
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching data from Kakao API:', error);
+        setLoading(false);
+      });
+  };
 
-    // 검색 버튼 클릭 시 호출되는 함수
-    const handleSearch = () => {
-        if (!query) {
-            alert('검색어를 입력하세요.');
-            return;
-        }
-        getBookData(query);  // 검색어가 있을 경우 API 호출
-    };
+  return (
+    <div className="App">
+      <h1>카카오 도서 검색</h1>
+      
+      <div className="search-container">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="검색어를 입력하세요"
+        />
+        <button onClick={searchBooks} disabled={loading}>
+          {loading ? '검색 중...' : '검색'}
+        </button>
+      </div>
 
-    return (
-        <div style={{ padding: '20px' }}>
-            <h1>네이버 도서 검색</h1>
+      {loading && <p className="loading">로딩 중...</p>}
 
-            {/* 검색어 입력 필드 */}
-            <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}  // 입력값 변경 시 상태 업데이트
-                placeholder="책 제목을 입력하세요"
-                style={{ padding: '10px', width: '300px', marginRight: '10px' }}
-            />
-            <button onClick={handleSearch} style={{ padding: '10px 15px' }}>
-                검색
-            </button>
+      <div>
+        {books.length > 0 ? (
+          <ul>
+            {books.map((book, index) => (
+              <li key={index}>
+                {book.thumbnail && (
+                  <img src={book.thumbnail} alt={book.title} className="book-thumbnail" />
+                )}
+                <h2>{book.title}</h2>
+                <p>{book.authors.join(', ')}</p>
+                <p>{book.publisher}</p>
+                <a href={book.url} target="_blank" rel="noopener noreferrer">
+                  자세히 보기
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          !loading && <p className="no-results">검색 결과가 없습니다.</p>
+        )}
+      </div>
+    </div>
+  );
+};
 
-            {/* 로딩 중 표시 */}
-            {loading && <p>로딩 중...</p>}
-
-            {/* 오류 메시지 표시 */}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-
-            {/* 책 리스트 출력 */}
-            <ul>
-                {books.map((book) => (
-                    <li
-                        key={book.isbn || book.title}  // 고유한 값 사용
-                        style={{ marginBottom: '20px', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}
-                    >
-                        <h3>{book.title}</h3>
-                        <p><strong>저자:</strong> {book.author}</p>
-                        <p><strong>출판사:</strong> {book.publisher}</p>
-                        {book.image && <img src={book.image} alt={book.title} style={{ width: '100px', height: '150px' }} />}
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-}
-
-export default App
+export default App;
