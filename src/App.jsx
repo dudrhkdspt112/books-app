@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 
@@ -12,7 +12,7 @@ const App = () => {
   // 도서 검색 함수
   const searchBooks = () => {
     if (!query) return;  // 검색어가 없으면 아무것도 하지 않음
-    
+
     setLoading(true);
     axios({
       method: 'GET',
@@ -34,6 +34,15 @@ const App = () => {
         setLoading(false);
       });
   };
+
+  // query가 변경될 때마다 자동으로 도서 검색
+  useEffect(() => {
+    if (query) {
+      searchBooks();  // 검색어가 변경되면 자동으로 검색 실행
+    } else {
+      setBooks([]);  // 검색어가 비었을 때 결과 목록 초기화
+    }
+  }, [query]);  // query가 변경될 때마다 실행
 
   return (
     <div className="App">
@@ -71,7 +80,7 @@ const App = () => {
             ))}
           </ul>
         ) : (
-          !loading && <p className="no-results">검색 결과가 없습니다.</p>
+          !loading && query && <p className="no-results">검색 결과가 없습니다.</p> // 검색어가 있을 때만 "검색 결과가 없습니다." 표시
         )}
       </div>
     </div>
