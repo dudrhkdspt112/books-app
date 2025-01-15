@@ -1,8 +1,18 @@
-# React + Vite
+#📚 카카오 도서 검색 앱 (Kakao Book Search App)
+이 프로젝트는 React와 Kakao API를 활용하여, 사용자가 검색어를 입력하고 관련된 도서를 찾아볼 수 있는 간단한 웹 애플리케이션입니다. 책의 제목, 저자, 출판사, 썸네일 이미지를 표시하여 사용자에게 유용한 도서 정보를 제공합니다.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+##🌟 기능
+도서 검색: 사용자가 검색어를 입력하면, 카카오 API를 통해 관련된 책을 검색합니다.
+검색 결과 출력: 책의 제목, 저자, 출판사, 썸네일 이미지를 목록으로 보여줍니다.
+검색 중 표시: 로딩 중에는 "검색 중..." 메시지를 표시하여 사용자가 기다릴 수 있도록 안내합니다.
+검색 결과가 없을 때: 검색 결과가 없으면 "검색 결과가 없습니다." 메시지를 출력합니다.
 
-Currently, two official plugins are available:
+ **Frontend**:
+  - **React**: 동적인 사용자 인터페이스(UI)를 구현하기 위해 React를 사용하여 컴포넌트 기반으로 앱을 구조화했습니다.
+  - **Vite**: 빠른 빌드와 핫 리로딩을 지원하는 **Vite**를 사용하여 개발 환경을 최적화했습니다.
+  - **CSS**: 직관적인 스타일링을 위해 기본 CSS를 사용하여 유연한 레이아웃을 구현했습니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+  ## 1. 프로젝트 클론
+먼저 GitHub에서 이 프로젝트를 클론합니다.
+### 2. 배포주소
+[배포주소] (https://text-bookapp.netlify.app/)
